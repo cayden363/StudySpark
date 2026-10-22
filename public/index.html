@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090909">
+  <meta name="description" content="StudySpark — a school-themed community chat and website sharing room.">
+  <title>StudySpark — Student Hub</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="glow glow-one"></div><div class="glow glow-two"></div>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="StudySpark home"><span class="brand-icon">ϟ</span><span>Study<span class="red">Spark</span><small>STUDENT COMMUNITY</small></span></a>
+    <div class="online-pill"><span class="pulse"></span><span id="onlineCount">1</span> online</div>
+  </header>
+
+  <main class="shell">
+    <section class="intro">
+      <div class="eyebrow"><span class="red-dot"></span> YOUR CAMPUS, YOUR COMMUNITY</div>
+      <h1>Welcome to <span class="red">StudySpark.</span></h1>
+      <p>Chat, share cool sites, and meet people in the community.</p>
+    </section>
+
+    <nav class="tabs" aria-label="Main navigation">
+      <button class="tab active" data-tab="chat"><span>▤</span> Chat Room</button>
+      <button class="tab" data-tab="websites"><span>↗</span> Game Websites</button>
+      <button class="tab" data-tab="username"><span>♙</span> Username</button>
+      <button class="tab" data-tab="mod"><span>⚑</span> Mod</button>
+    </nav>
+
+    <section class="panel active" id="panel-chat">
+      <div class="panel-heading"><div><div class="section-kicker">LIVE COMMUNITY</div><h2>Chat Room <span class="live-tag"><i></i> LIVE</span></h2></div><span class="muted small">Be cool. Be respectful.</span></div>
+      <div class="chat-layout">
+        <div class="chat-main">
+          <div class="messages" id="messages" aria-live="polite"><div class="empty">Connecting to the room…</div></div>
+          <form id="chatForm" class="composer"><input id="chatInput" maxlength="500" autocomplete="off" placeholder="Send a message to everyone…" aria-label="Chat message"><button class="primary" type="submit">Send <span>➤</span></button></form>
+          <div class="hint">Enter to send · Keep personal information private</div>
+        </div>
+        <aside class="members"><div class="members-title">ONLINE NOW <span id="memberCount">1</span></div><div id="userList"></div><p class="hint">Right-click a user to moderate (moderators only).</p></aside>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-websites">
+      <div class="panel-heading"><div><div class="section-kicker">COMMUNITY PICKS</div><h2>Game Websites</h2></div><span class="muted small">Share your favorite links</span></div>
+      <form id="linkForm" class="link-form"><label>Website name<input id="linkTitle" maxlength="80" placeholder="e.g. Cool game site" required></label><label>Website URL<input id="linkUrl" maxlength="500" placeholder="https://example.com" required type="url"></label><button class="primary" type="submit">Share website ↗</button></form>
+      <div id="links" class="link-grid"><div class="empty">No websites shared yet. Add the first one!</div></div>
+      <p class="hint">Only share links you trust. Links open in a new tab.</p>
+    </section>
+
+    <section class="panel" id="panel-username">
+      <div class="panel-heading"><div><div class="section-kicker">MAKE IT YOURS</div><h2>Your Username</h2></div></div>
+      <div class="settings-card"><div class="avatar large" id="bigAvatar">S</div><div class="settings-copy"><div class="muted small">CURRENT USERNAME</div><h3 id="currentUsername">Student</h3><p class="muted">Choose a name that people in the room will recognize.</p></div></div>
+      <form id="usernameForm" class="username-form"><label for="usernameInput">New username</label><div class="inline-input"><input id="usernameInput" maxlength="20" minlength="2" placeholder="2–20 characters" required><button class="primary" type="submit">Save username</button></div><p class="hint" id="cooldownText">You can change your username once every 10 minutes.</p></form>
+    </section>
+
+    <section class="panel" id="panel-mod">
+      <div class="panel-heading"><div><div class="section-kicker">ROOM SAFETY</div><h2>Moderator Access</h2></div><span class="muted small">Restricted area</span></div>
+      <div id="modLoginBox" class="mod-card"><div class="lock-icon">⚑</div><h3>Moderator sign-in</h3><p class="muted">Enter the private moderator password to unlock moderation tools.</p><form id="modForm" class="inline-input"><input id="modPassword" type="password" autocomplete="current-password" placeholder="Moderator password" required><button class="primary" type="submit">Unlock</button></form><p class="hint">Set the password privately in the server's environment settings.</p></div>
+      <div id="modTools" class="mod-card hidden"><div class="success-label">✓ MODERATOR ACCESS ACTIVE</div><h3>Moderation tools</h3><p class="muted">Return to Chat Room and right-click a user to mute them for one hour.</p><button id="modLogout" class="secondary" type="button">Lock moderator panel</button></div>
+    </section>
+
+    <footer><span class="brand-mini">ϟ STUDY<span class="red">SPARK</span></span><span>Made for community. Keep it kind.</span><span class="status"><i></i> Server connection <b id="connectionState">connecting</b></span></footer>
+  </main>
+
+  <div id="contextMenu" class="context-menu hidden"><button id="muteAction" type="button">⊘ Mute for 1 hour</button></div>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>

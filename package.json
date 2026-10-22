@@ -1,0 +1,12 @@
+{
+  "name": "studyspark-community",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A dark, red-accented real-time school-themed community chat and website sharing app.",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "express": "^4.21.2",
+    "socket.io": "^4.8.1"
+  }
+}
