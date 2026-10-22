@@ -130,6 +130,23 @@ io.on("connection", (socket) => {
     io.emit("links", sharedLinks);
   });
 
+    socket.on("deleteLink", (linkId) => {
+    const moderator = users.get(socket.id);
+
+    if (!moderator || !moderator.isMod) {
+      return errorTo(socket, "Moderator access required.");
+    }
+
+    const index = sharedLinks.findIndex(link => link.id === linkId);
+
+    if (index === -1) {
+      return errorTo(socket, "That website was not found.");
+    }
+
+    sharedLinks.splice(index, 1);
+    io.emit("links", sharedLinks);
+    sendSystem(`${moderator.identity.username} deleted a shared website.`);
+  });
   socket.on("modLogin", (password) => {
     const user = users.get(socket.id);
     const supplied = Buffer.from(String(password || ""));
