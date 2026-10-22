@@ -10,6 +10,7 @@ let currentUsername = "Student";
 let nextNameChangeAt = 0;
 let users = [];
 let isMod = false;
+let currentLinks = [];
 let contextTarget = null;
 let toastTimer;
 const esc = (s) => String(s ?? "");
@@ -41,7 +42,8 @@ socket.on("init", data => {
   $("bigAvatar").textContent = initials(currentUsername);
   $("usernameInput").value = currentUsername;
   renderMessages(data.messages || []);
-  renderLinks(data.links || []);
+    currentLinks = data.links || [];
+  renderLinks(currentLinks);
   renderUsers(data.users || []);
   updateCooldown();
 });
@@ -55,7 +57,10 @@ socket.on("system", item => {
   $("messages").scrollTop = $("messages").scrollHeight;
 });
 socket.on("users", renderUsers);
-socket.on("links", renderLinks);
+socket.on("links", items => {
+  currentLinks = items || [];
+  renderLinks(currentLinks);
+});
 socket.on("notice", data => toast(data.text));
 socket.on("usernameChanged", data => {
   currentUsername = data.username;
@@ -68,6 +73,7 @@ socket.on("usernameChanged", data => {
 });
 socket.on("modLoginSuccess", () => {
   isMod = true;
+   renderLinks(currentLinks);
   $("modLoginBox").classList.add("hidden");
   $("modTools").classList.remove("hidden");
   toast("Moderator tools unlocked.");
@@ -173,8 +179,25 @@ function renderLinks(items) {
     const title = document.createElement("h3"); title.textContent = item.title;
     const link = document.createElement("a"); link.href = item.url; link.target = "_blank"; link.rel = "noopener noreferrer"; link.textContent = new URL(item.url).hostname;
     copy.append(title, link); top.append(icon, copy);
-    const by = document.createElement("div"); by.className = "link-by"; by.textContent = `Shared by ${item.username} · ${time(item.time)}`;
-    card.append(top, by); root.appendChild(card);
+        const by = document.createElement("div");
+    by.className = "link-by";
+    by.textContent = `Shared by ${item.username} · ${time(item.time)}`;
+
+    card.append(top, by);
+
+    if (isMod) {
+      const deleteButton = document.createElement("button");
+      deleteButton.type = "button";
+      deleteButton.textContent = "Delete";
+      deleteButton.addEventListener("click", () => {
+        if (confirm(`Delete "${item.title}" for everyone?`)) {
+          socket.emit("deleteLink", item.id);
+        }
+      });
+      card.appendChild(deleteButton);
+    }
+
+    root.appendChild(card);
   });
 }
 function updateCooldown() {
